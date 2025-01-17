@@ -32,36 +32,35 @@ class ConsoleHandler extends AbstractProcessingHandler
   /** @var OutputInterface */
   private $output;
 
-  public function __construct (OutputInterface $output, LogSettings $logSettings, $bubble = true)
+  public function __construct(OutputInterface $output, LogSettings $logSettings, $bubble = true)
   {
     if ($output instanceof ConsoleOutputInterface)
-      $output = $output->getErrorOutput ();
+      $output = $output->getErrorOutput();
     $this->output            = $output;
     $this->verbosityLevelMap = $logSettings->verbosityLevelMap + $this->verbosityLevelMap;
-    parent::__construct (Logger::DEBUG, $bubble);
+    parent::__construct(Logger::DEBUG, $bubble);
   }
 
-  public function isHandling (array $record)
+  public function isHandling(array $record): bool
   {
     $level = $record['level'];
     if (!isset($this->verbosityLevelMap[$level]))
-      throw new InvalidArgumentException(sprintf ('Log level "%s" is not supported.', $level));
-    return $this->output->getVerbosity () >= $this->verbosityLevelMap[$level];
+      throw new InvalidArgumentException(sprintf('Log level "%s" is not supported.', $level));
+    return $this->output->getVerbosity() >= $this->verbosityLevelMap[$level];
   }
 
   /**
    * @param array $verbosityLevelMap
    * @return $this
    */
-  function setVerbosityLevelMap (array $verbosityLevelMap = [])
+  function setVerbosityLevelMap(array $verbosityLevelMap = [])
   {
     $this->verbosityLevelMap = $verbosityLevelMap + $this->verbosityLevelMap;
     return $this;
   }
 
-  protected function write (array $record)
+  protected function write(array $record): void
   {
-    $this->output->writeln ($record['formatted']);
+    $this->output->writeln($record['formatted']);
   }
-
 }

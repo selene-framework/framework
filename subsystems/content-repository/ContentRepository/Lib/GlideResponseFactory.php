@@ -22,20 +22,20 @@ class GlideResponseFactory extends PsrResponseFactory
   /**
    * @param InjectorInterface $injector
    */
-  public function __construct (InjectorInterface $injector)
+  public function __construct(InjectorInterface $injector)
   {
     $this->injector = $injector;
   }
 
-  public function create(FilesystemOperator $cache, $path)
-	{
+  public function create(FilesystemOperator $cache, $path): \Psr\Http\Message\ResponseInterface
+  {
     /** @var ResponseFactoryInterface $factory */
-    $factory              = $this->injector->make (ResponseFactoryInterface::class);
-    $this->response       = $factory->make ();
-    $this->streamCallback = function ($stream) use ($factory) {
-      return $factory->makeBodyStream ('', $stream);
+    $factory              = $this->injector->make(ResponseFactoryInterface::class);
+    $this->response       = $factory->make();
+    $this->streamCallback = function ($stream) use ($factory)
+    {
+      return $factory->makeBodyStream('', $stream);
     };
-    parent::create ($cache, $path);
+    parent::create($cache, $path);
   }
-
 }
